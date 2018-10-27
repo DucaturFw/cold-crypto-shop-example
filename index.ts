@@ -7,6 +7,10 @@ app.get('/', (req, res) =>
 {
 	res.send(readFileSync('./index.html').toString())
 })
+app.get('/done', (req, res) =>
+{
+	res.send(readFileSync('./done.html').toString())
+})
 
 console.log('starting server...')
 
