@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>TypeScript</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!--  <script type="text/javascript" src="/js/typescript/typescript.js"></script>
+
+  <script
+    type="text/javascript"
+    src="/js/lib/dummy.js"
+    
+  ></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css"> -->
+
+  <style type="text/css">
+    body {
+  background: #bfd8d3;
+  padding: 20px;
+  font-family: Helvetica;
+  font-size: 22px;
+}
+
+#app {
+  /* background: #fff; */
+  border-radius: 4px;
+  padding: 20px;
+  transition: all 0.2s;
+  /* text-align: center; */
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.crossed {
+  text-decoration: line-through;
+}
+.disabled {
+  
+}
+
+body {
+  font-family: 'Lobster Two', cursive;
+  font-style: italic;
+}
+
+#total {
+  font-weight: bold;
+}
+
+ul#prolist {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+a.button1 {
+  /* display: inline-block; */
+  padding: 0.35em 1.2em 0.5em;
+  border: 0.1em solid #7F908D;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  /* font-family: 'Roboto', sans-serif; */
+  /* font-weight: 300; */
+  color: #000;
+  text-align: center;
+  transition: all 0.2s;
+  margin-left: 40px;
+}
+
+a.button1:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+/* Customize the label (the container) */
+
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  /* background-color: #eee; */
+  border-radius: 1px;
+  border-color: #7F908D;
+  border-style: solid;
+}
+
+/* On mouse-over, add a grey background color */
+
+.container:hover input~.checkmark {
+  /* background-color: #ccc; */
+}
+
+/* When the checkbox is checked, add a blue background */
+
+.container input:checked~.checkmark {
+  /* background-color: #2196F3; */
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.crossed .checkmark {
+  display: none;
+}
+label.crossed {
+  cursor: default;
+}
+
+/* Show the checkmark when checked */
+
+.container input:checked~.checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+  </style>
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+
+</head>
+<body>
+  <link href="https://fonts.googleapis.com/css?family=Lobster+Two" rel="stylesheet">
+<div id="app">
+  <img class="logo center" src="https://i.imgur.com/qHAUvmu.png" width="150px">
+  <h3>
+    Your order:
+  </h3>
+  <ul id="prolist">
+    <!-- product list goes here -->
+  </ul>
+  Total: <span id="total"></span> FTM
+  <br/><br/>
+  <a id="paybtn" class="button1 center" href="#" onclick="false">Pay now</a>
+</div>
+</body>
+
+<script>
+	function li(content, classes) {
+		return '<li' + (classes ? ' class="' + classes + '"' : '') + '>' + content + '</li>';
+	}
+	function checkboxed(content, classes) {
+		return '<label class="container ' + (classes || "") + '">' + content + '<input type="checkbox" checked="checked"><span class="checkmark"></span></label>';
+	}
+	function product(name, amount, price) {
+		return '<span class="name">' + name + '</span> <span class="amount">' + amount + 'x</span> <span class="price">' + price + ' FTM</span>';
+  }
+  var ORDER_ID = 115412
+	var PRODUCTS = [
+		{
+			id: "cap",
+			name: "Cappuccino",
+			amount: 2,
+			price: 15,
+			paid: false,
+		},
+		{
+			id: "lat",
+			name: "Latte macchiato",
+			amount: 1,
+			price: 12,
+			paid: true,
+		},
+		{
+			id: "cro",
+			name: "Croissant",
+			amount: 3,
+			price: 10.5,
+			paid: false,
+		}
+  ];
+  function calcSum()
+  {
+    var sum = getSelected()
+			.map(function (x) { return x.price * x.amount; })
+      .reduce(function (sum, x) { return sum + x; }, 0);
+    return sum;
+  }
+  function getSelected()
+  {
+    var selected = checksList()
+			.map(function (x, i) { return x.checked ? PRODUCTS[i] : undefined; })
+			.filter(function (x) { return !!x; })
+      .filter(function (x) { return !x.paid; });
+    return selected;
+  }
+	function onCheckClick() {
+		var sum = calcSum();
+    document.querySelector('#total').innerHTML = sum + "";
+    updatePayBtn();
+	}
+	function checksList() {
+		return Array.prototype.slice.apply(document.querySelectorAll('input[type="checkbox"]'));
+  }
+  function toHex(str) {
+    return str
+      .split('')
+      .map(function(char){return char.charCodeAt(0).toString(16)})
+      .map(function(char){return (char.length > 1) ? char : ("0" + char)})
+      .join('')
+  }
+  function updatePayBtn()
+  {
+    var sum = calcSum();
+    var selected = getSelected().map(function(x){return x.id});
+    var data = "0x" + toHex(ORDER_ID + ":" + selected.join(';'));
+    var address = "0xae43508671e598a62a266e17c1ff32ba5a01df7f";
+    document.querySelector('#paybtn').href = "#?address=" + address + "&amount=" + sum + "&data=" + data;
+  }
+
+  document.querySelector("#prolist").innerHTML = PRODUCTS.map(function (x) { return li(checkboxed(product(x.name, x.amount, x.price), x.paid ? 'crossed' : '')); }).join('');
+	checksList().forEach(function (x, i) {
+		var p = PRODUCTS[i];
+		if (!p.paid)
+			x.onclick = onCheckClick;
+	});
+  onCheckClick();
+
+
+</script>
+</html>
