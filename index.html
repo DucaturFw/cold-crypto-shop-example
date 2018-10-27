@@ -253,7 +253,8 @@ label.crossed {
     var selected = getSelected().map(function(x){return x.id});
     var data = "0x" + toHex(ORDER_ID + ":" + selected.join(';'));
     var address = "0xae43508671e598a62a266e17c1ff32ba5a01df7f";
-    var path = '/paytoaddress/'+address+'?amount='+encodeURIComponent(sum)+'&data=' + data;
+    var callback = location.origin + '/done';
+    var path = '/paytoaddress/'+address+'?amount='+encodeURIComponent(sum)+'&data=' + data + '&callback=' + callback;
     var host = location.origin.replace('8080', '4444');
     document.querySelector('#paybtn').href = host + path;
   }
